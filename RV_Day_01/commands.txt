@@ -1,0 +1,42 @@
+// RV_D1SK2_L1
+leafpad sum1ton.c &
+
+gcc sum1ton.c
+./a.out
+
+//RV_D1SK2_L2
+cat sum1ton.c
+
+riscv64-unknown-elf-gcc -O1 -mabi=lp64 -march=rv64i -o sum1ton_O1.o sum1ton.c
+riscv64-unknown-elf-objdump -d sum1ton_O1.o | less 
+/main
+^Z
+
+riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o sum1ton_Ofast.o sum1ton.c
+riscv64-unknown-elf-objdump -d sum1ton_Ofast.o | less 
+/main
+^Z
+
+Note: To get complete objdump, run: riscv64-unknown-elf-objdump -d <.o object file>
+
+//RV_D1SK2_L3
+spike pk <.o object file>
+
+spike -d pk <.o object file>
+until pc 0 100b0
+reg 0 a2
+<ENTER> (To process next instruction in PC+4)
+
+//RV_D1SK3_L3
+leafpad unsignedHighest.c
+vim unsignedHighest.c
+
+riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o unsignedHighest.o unsignedHighest.c
+spike pk unsignedHighest.o
+
+leafpad signedHighest.c &
+vim signedHighest.c
+
+riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o signedHighest.o signedHighest.c
+spike pk signedHighest.o
+
